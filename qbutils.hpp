@@ -6,6 +6,8 @@
 #include "qbVector2.h"
 #include "qbVector3.h"
 #include "qbVector4.h"
+#include "qbMatrix33.h"
+#include "qbMatrix44.h"
 
 namespace qbRT
 {
@@ -16,11 +18,11 @@ namespace qbRT
 	{
 		struct hitData
 		{
-			qbVector3<double> poi		{3};
-			qbVector3<double> normal	{3};
-			qbVector3<double> color		{3};
-			qbVector3<double> localPOI	{3};
-			qbVector2<double> uvCoords	{2};
+			qbVector3<double> poi;
+			qbVector3<double> normal;
+			qbVector3<double> color;
+			qbVector3<double> localPOI;
+			qbVector2<double> uvCoords;
 			std::shared_ptr<qbRT::ObjectBase> hitObject;
 		};
 	}
@@ -28,6 +30,8 @@ namespace qbRT
 	namespace UTILS
 	{
 		void PrintVector(const qbVector3<double> &inputVector);
+		void PrintMatrix(const qbMatrix33<double> &inputMatrix);
+		void PrintMatrix(const qbMatrix44<double> &inputMatrix);
 	}
 }
 

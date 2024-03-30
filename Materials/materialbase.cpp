@@ -20,7 +20,7 @@ qbVector3<double> qbRT::MaterialBase::ComputeColor(	const std::vector<std::share
 																										const qbRT::Ray &cameraRay)
 {
 	// Define an initial material color.
-	qbVector3<double> matColor	{3};
+	qbVector3<double> matColor;
 	
 	return matColor;
 }
@@ -33,9 +33,9 @@ qbVector3<double> qbRT::MaterialBase::ComputeDiffuseColor(	const std::vector<std
 																													const qbVector3<double> &baseColor)
 {
 	// Compute the color due to diffuse illumination.
-	qbVector3<double> diffuseColor	{3};
+	qbVector3<double> diffuseColor;
 	double intensity;
-	qbVector3<double> color {3};
+	qbVector3<double> color;
 	double red = 0.0;
 	double green = 0.0;
 	double blue = 0.0;
@@ -78,7 +78,7 @@ qbVector3<double> qbRT::MaterialBase::ComputeReflectionColor(	const std::vector<
 																															const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
 																															const qbRT::Ray &incidentRay)
 {
-	qbVector3<double> reflectionColor {3};
+	qbVector3<double> reflectionColor;
 	
 	// Compute the reflection vector.
 	qbVector3<double> d = incidentRay.m_lab;
@@ -95,7 +95,7 @@ qbVector3<double> qbRT::MaterialBase::ComputeReflectionColor(	const std::vector<
 	
 	/* Compute illumination for closest object assuming that there was a
 		valid intersection. */
-	qbVector3<double> matColor	{3};
+	qbVector3<double> matColor;
 	if ((intersectionFound) && (m_reflectionRayCount < m_maxReflectionRays))
 	{
 		// Increment the reflectionRayCount.
@@ -132,9 +132,6 @@ bool qbRT::MaterialBase::CastRay( const qbRT::Ray &castRay, const std::vector<st
 																	qbRT::DATA::hitData &closestHitData)
 {
 	// Test for intersections with all of the objects in the scene.
-	//qbVector3<double> intPoint			{3};
-	//qbVector3<double> localNormal	{3};
-	//qbVector3<double> localColor		{3};
 	qbRT::DATA::hitData hitData;
 	
 	double minDist = 1e6;
@@ -159,9 +156,6 @@ bool qbRT::MaterialBase::CastRay( const qbRT::Ray &castRay, const std::vector<st
 				{
 					minDist = dist;
 					closestObject = currentObject;
-					//closestIntPoint = intPoint;
-					//closestLocalNormal = localNormal;
-					//closestLocalColor = localColor;
 					closestHitData = hitData;
 				}
 			}
@@ -283,8 +277,7 @@ qbVector3<double> qbRT::MaterialBase::ComputeSpecAndDiffuse(	const std::vector<s
 				
 				// Compute the reflection vector.
 				qbVector3<double> d = lightRay.m_lab;
-				qbVector3<double> r = d - (2 * qbVector3<double>::dot(d, localNormal) * localNormal);
-				//r.Normalize();
+				qbVector3<double> r = d - (2.0 * qbVector3<double>::dot(d, localNormal) * localNormal);
 				
 				// Compute the dot product.
 				qbVector3<double> v = cameraRay.m_lab;

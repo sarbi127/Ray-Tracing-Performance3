@@ -24,3 +24,4 @@ void qbRT::Texture::Flat::SetColor(const qbVector4<double> &inputColor)
 }
 
 
+

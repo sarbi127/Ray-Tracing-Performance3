@@ -1,39 +1,3 @@
-/* ***********************************************************
-	gtfm.cpp
-	
-	The GTform class definition - A class to handle geometric
-	transforms.
-	
-	This file forms part of the qbRayTrace project as described
-	in the series of videos on the QuantitativeBytes YouTube
-	channel.
-	
-	This code corresponds specifically to Episode 5 of the series,
-	which may be found here:
-	https://youtu.be/-Apu2BNp3t8
-	
-	The whole series may be found on the QuantitativeBytes 
-	YouTube channel at:
-	www.youtube.com/c/QuantitativeBytes
-	
-	GPLv3 LICENSE
-	Copyright (c) 2021 Michael Bennett
-	
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.	
-	
-***********************************************************/
-
 #include "gtfm.hpp"
 #include "qbutils.hpp"
 
@@ -60,14 +24,16 @@ qbRT::GTform::GTform(const qbVector3<double> &translation, const qbVector3<doubl
 }
 
 // Construct from a pair of matrices.
-qbRT::GTform::GTform(const qbMatrix2<double> &fwd, const qbMatrix2<double> &bck)
+qbRT::GTform::GTform(const qbMatrix44<double> &fwd, const qbMatrix44<double> &bck)
 {
+	/*
 	// Verify that the inputs are 4x4.
 	if (	(fwd.GetNumRows() != 4) || (fwd.GetNumCols() != 4) ||
 				(bck.GetNumRows() != 4) || (bck.GetNumCols() != 4))
 	{
 		throw std::invalid_argument("Cannot construct GTform, inputs are not all 4x4.");
 	}
+	*/
 	
 	m_fwdtfm = fwd;
 	m_bcktfm = bck;
@@ -80,11 +46,11 @@ void qbRT::GTform::SetTransform(	const qbVector3<double> &translation,
 																	const qbVector3<double> &scale)
 {
 	// Define a matrix for each component of the transform.
-	qbMatrix2<double> translationMatrix	{4, 4};
-	qbMatrix2<double> rotationMatrixX		{4, 4};
-	qbMatrix2<double>	rotationMatrixY		{4, 4};
-	qbMatrix2<double> rotationMatrixZ		{4, 4};
-	qbMatrix2<double>	scaleMatrix				{4, 4};
+	qbMatrix44<double> translationMatrix;
+	qbMatrix44<double> rotationMatrixX;
+	qbMatrix44<double>	rotationMatrixY;
+	qbMatrix44<double> rotationMatrixZ;
+	qbMatrix44<double>	scaleMatrix;
 	
 	// Set these to identity.
 	translationMatrix.SetToIdentity();
@@ -132,7 +98,7 @@ void qbRT::GTform::SetTransform(	const qbVector3<double> &translation,
 	m_bcktfm.Inverse();		
 }
 
-void qbRT::GTform::SetTransform(const qbMatrix2<double> &fwd, const qbMatrix2<double> &bck)
+void qbRT::GTform::SetTransform(const qbMatrix44<double> &fwd, const qbMatrix44<double> &bck)
 {
 	m_fwdtfm = fwd;
 	m_bcktfm = bck;
@@ -140,11 +106,11 @@ void qbRT::GTform::SetTransform(const qbMatrix2<double> &fwd, const qbMatrix2<do
 }
 
 // Functions to return the transform matrices.
-qbMatrix2<double> qbRT::GTform::GetForward()
+qbMatrix44<double> qbRT::GTform::GetForward()
 {
 	return m_fwdtfm;
 }
-qbMatrix2<double> qbRT::GTform::GetBackward()
+qbMatrix44<double> qbRT::GTform::GetBackward()
 {
 	return m_bcktfm;
 }
@@ -176,11 +142,12 @@ qbRT::Ray qbRT::GTform::Apply(const qbRT::Ray &inputRay, bool dirFlag)
 qbVector3<double> qbRT::GTform::Apply(const qbVector3<double> &inputVector, bool dirFlag)
 {
 	// Convert inputVector to a 4-element vector.
-	std::vector<double> tempData {	inputVector.GetElement(0),
-																	inputVector.GetElement(1),
-																	inputVector.GetElement(2),
-																	1.0 };
-	qbVector4<double> tempVector {tempData};
+	//std::vector<double> tempData {	inputVector.GetElement(0),
+	//																inputVector.GetElement(1),
+	//																inputVector.GetElement(2),
+	//																1.0 };
+	//qbVector4<double> tempVector {tempData};
+	qbVector4<double> tempVector {inputVector.GetElement(0), inputVector.GetElement(1), inputVector.GetElement(2), 1.0};
 	
 	// Create a vector for the result.
 	qbVector4<double> resultVector;
@@ -197,10 +164,10 @@ qbVector3<double> qbRT::GTform::Apply(const qbVector3<double> &inputVector, bool
 	}
 	
 	// Reform the output as a 3-element vector.
-	qbVector3<double> outputVector {std::vector<double> {	resultVector.GetElement(0),
-																												resultVector.GetElement(1),
-																												resultVector.GetElement(2) }};
-																					
+	//qbVector3<double> outputVector {std::vector<double> {	resultVector.GetElement(0),
+	//																											resultVector.GetElement(1),
+	//																											resultVector.GetElement(2) }};
+	qbVector3<double> outputVector {resultVector.GetElement(0), resultVector.GetElement(1), resultVector.GetElement(2)};
 	return outputVector;
 }
 
@@ -219,10 +186,10 @@ namespace qbRT
 	qbRT::GTform operator* (const qbRT::GTform &lhs, const qbRT::GTform &rhs)
 	{
 		// Form the product of the two forward transforms.
-		qbMatrix2<double> fwdResult = lhs.m_fwdtfm * rhs.m_fwdtfm;
+		qbMatrix44<double> fwdResult = lhs.m_fwdtfm * rhs.m_fwdtfm;
 		
 		// Compute the backward transform as the inverse of the forward transform.
-		qbMatrix2<double> bckResult = fwdResult;
+		qbMatrix44<double> bckResult = fwdResult;
 		bckResult.Inverse();
 		
 		// Form the final result.
@@ -259,7 +226,7 @@ void qbRT::GTform::PrintMatrix(bool dirFlag)
 	}
 }
 
-void qbRT::GTform::Print(const qbMatrix2<double> &matrix)
+void qbRT::GTform::Print(const qbMatrix44<double> &matrix)
 {
 	int nRows = matrix.GetNumRows();
 	int nCols = matrix.GetNumCols();
@@ -302,7 +269,7 @@ void qbRT::GTform::ExtractLinearTransform()
 }
 
 // Function to return the normal transform.
-qbMatrix2<double> qbRT::GTform::GetNormalTransform()
+qbMatrix33<double> qbRT::GTform::GetNormalTransform()
 {
 	return m_lintfm;
 }

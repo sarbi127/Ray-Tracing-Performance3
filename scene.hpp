@@ -22,6 +22,8 @@
 #include "qbVector2.h"
 #include "qbVector3.h"
 #include "qbVector4.h"
+#include "qbMatrix33.h"
+#include "qbMatrix44.h"
 
 namespace qbRT
 {

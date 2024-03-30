@@ -3,6 +3,7 @@
 
 #include <memory>
 #include "../qbMatrix.h"
+#include "../qbMatrix33.h"
 #include "../ray.hpp"
 #include "../Textures/texturebase.hpp"
 #include "../qbVector.h"
@@ -45,7 +46,7 @@ namespace qbRT
 			
 			private:
 				// Initialise the transform matrix to the identity matrix.
-				qbMatrix2<double> m_transformMatrix {3, 3, std::vector<double>{1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0}};
+				qbMatrix33<double> m_transformMatrix {std::vector<double>{1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0}};
 				
 		};
 	}

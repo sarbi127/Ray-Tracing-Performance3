@@ -35,6 +35,7 @@ double qbRT::Texture::TextureBase::GetValue(const qbVector2<double> &uvCoords)
 void qbRT::Texture::TextureBase::SetTransform(const qbVector2<double> &translation, const double &rotation, const qbVector2<double> &scale)
 {
 	// Build the transform matrix.
+/*	
 	qbMatrix2<double> rotationMatrix = {3, 3, std::vector<double> {
 																			cos(rotation), -sin(rotation), 0.0,
 																			sin(rotation), cos(rotation), 0.0,
@@ -49,6 +50,24 @@ void qbRT::Texture::TextureBase::SetTransform(const qbVector2<double> &translati
 																					1.0, 0.0, translation.GetElement(0),
 																					0.0, 1.0, translation.GetElement(1),
 																					0.0, 0.0, 1.0}};
+*/
+
+	
+	qbMatrix33<double> rotationMatrix = {std::vector<double> {
+																			cos(rotation), -sin(rotation), 0.0,
+																			sin(rotation), cos(rotation), 0.0,
+																			0.0, 0.0, 1.0}};
+																			
+	qbMatrix33<double> scaleMatrix = {std::vector<double> {
+																		scale.GetElement(0), 0.0, 0.0,
+																		0.0, scale.GetElement(1), 0.0,
+																		0.0, 0.0, 1.0}};
+																		
+	qbMatrix33<double> translationMatrix = {std::vector<double> {
+																					1.0, 0.0, translation.GetElement(0),
+																					0.0, 1.0, translation.GetElement(1),
+																					0.0, 0.0, 1.0}};
+
 																					
 	// And combine to form the final transform matrix.
 	m_transformMatrix = translationMatrix * rotationMatrix * scaleMatrix;

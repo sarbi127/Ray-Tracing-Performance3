@@ -36,5 +36,3 @@ double qbRT::RM::SDF::Box(const qbVector3<double> &p, const qbVector3<double> &c
 	
 	return internalDist + externalDist;
 }
-
-

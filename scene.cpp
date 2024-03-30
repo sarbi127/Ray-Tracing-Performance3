@@ -9,6 +9,8 @@
 #include "./Textures/marble.hpp"
 #include "./Textures/qbStone1.hpp"
 #include <chrono>
+#include "qbMatrix33.h"
+#include "qbMatrix44.h"
 
 using namespace std;
 
@@ -139,42 +141,42 @@ qbRT::Scene::Scene()
 	// Create some materials.
 	// **************************************************************************************
 	auto floorMaterial = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());	
-	//floorMaterial -> m_baseColor = qbVector3<double>{std::vector<double>{1.0, 1.0, 1.0}};
-	floorMaterial -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
+	floorMaterial -> m_baseColor = qbVector3<double>{std::vector<double>{1.0, 1.0, 1.0}};
+	//floorMaterial -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
 	floorMaterial -> m_reflectivity = 0.25;
 	floorMaterial -> m_shininess = 0.0;
 	floorMaterial -> AssignTexture(floorTexture);
 	
 	auto BodyMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
-	//BodyMat -> m_baseColor = qbVector3<double>{std::vector<double>{1.0, 1.0, 1.0}};
-	BodyMat -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
+	BodyMat -> m_baseColor = qbVector3<double>{std::vector<double>{1.0, 1.0, 1.0}};
+	//BodyMat -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
 	BodyMat -> m_reflectivity = 0.1;
 	BodyMat -> m_shininess = 16.0;;
 	BodyMat -> AssignTexture(Texture);
 
 	auto sphereBodyMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
-	//sphereBodyMat -> m_baseColor = qbVector3<double>{std::vector<double>{1.0, 1.0, 1.0}};
-	sphereBodyMat -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
+	sphereBodyMat -> m_baseColor = qbVector3<double>{std::vector<double>{1.0, 1.0, 1.0}};
+	//sphereBodyMat -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
 	sphereBodyMat -> m_reflectivity = 0.1;
 	sphereBodyMat -> m_shininess = 16.0;;
 	sphereBodyMat -> AssignTexture(sphereTexture);
 
 	auto torusBodyMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
-	//torusBodyMat -> m_baseColor = qbVector3<double>{std::vector<double>{1.0, 1.0, 1.0}};
-	torusBodyMat -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
+	torusBodyMat -> m_baseColor = qbVector3<double>{std::vector<double>{1.0, 1.0, 1.0}};
+	//torusBodyMat -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
 	torusBodyMat -> m_reflectivity = 0.1;
 	torusBodyMat -> m_shininess = 16.0;;
 	torusBodyMat -> AssignTexture(torusTexture);
 	
 	auto metalMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
-	//metalMat -> m_baseColor = qbVector3<double>{std::vector<double>{0.3, 0.3, 0.3}};
-	metalMat -> m_baseColor = std::vector<double>{0.3, 0.3, 0.3};
+	metalMat -> m_baseColor = qbVector3<double>{std::vector<double>{0.3, 0.3, 0.3}};
+	//metalMat -> m_baseColor = std::vector<double>{0.3, 0.3, 0.3};
 	metalMat -> m_reflectivity = 0.5;
 	metalMat -> m_shininess = 64.0;
 	
 	auto plasticMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
-	//plasticMat -> m_baseColor = qbVector3<double>{std::vector<double>{0.75, 0.75, 0.75}};
-	plasticMat -> m_baseColor = std::vector<double>{0.75, 0.75, 0.75};
+	plasticMat -> m_baseColor = qbVector3<double>{std::vector<double>{0.75, 0.75, 0.75}};
+	//plasticMat -> m_baseColor = std::vector<double>{0.75, 0.75, 0.75};
 	plasticMat -> m_reflectivity = 0.0;
 	plasticMat -> m_shininess = 0.0;
 	
@@ -342,6 +344,16 @@ qbRT::Scene::Scene()
 	donut -> AssignMaterial(torusBodyMat);
 	donut -> m_uvMapType = qbRT::uvSPHERE;
 
+	auto torus = std::make_shared<qbRT::RM::Torus> (qbRT::RM::Torus());
+	torus -> m_tag = "torus";
+	torus -> m_isVisible = true;
+	torus -> SetRadii(0.7, 0.3);
+	torus -> SetTransformMatrix(qbRT::GTform {	qbVector3<double>{std::vector<double>{2.5, -2.0, 0.2}},
+																							qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																							qbVector3<double>{std::vector<double>{1.0, 1.0, 1.0}}}	);
+	torus -> AssignMaterial(woodMat);
+	torus -> m_uvMapType = qbRT::uvSPHERE;
+
 	// **************************************************************************************
 	// Put the objects into the scene.	
 	// **************************************************************************************
@@ -352,11 +364,12 @@ qbRT::Scene::Scene()
 	m_objectList.push_back(box);
 	m_objectList.push_back(box2);	
 	m_objectList.push_back(box3);
-	m_objectList.push_back(ball);
+	//m_objectList.push_back(ball);
 	m_objectList.push_back(floor);
 	m_objectList.push_back(backWall);
 	m_objectList.push_back(sideWall);
-	m_objectList.push_back(donut);
+	//m_objectList.push_back(donut);
+	//m_objectList.push_back(torus);
 	
 	// **************************************************************************************	
 	// Construct and setup the lights.
@@ -418,9 +431,9 @@ bool qbRT::Scene::Render(qbImage &outputImage)
 			
 			// Test for intersections with all objects in the Scene_E21.
 			std::shared_ptr<qbRT::ObjectBase> closestObject;
-			qbVector3<double> closestIntPoint		{3};
-			qbVector3<double> closestLocalNormal	{3};
-			qbVector3<double> closestLocalColor	{3};
+			//qbVector3<double> closestIntPoint		{3};
+			//qbVector3<double> closestLocalNormal	{3};
+			//qbVector3<double> closestLocalColor	{3};
 			qbRT::DATA::hitData closestHitData;
 			bool intersectionFound = CastRay(cameraRay, closestObject, closestHitData);
 			

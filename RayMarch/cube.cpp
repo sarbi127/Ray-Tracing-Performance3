@@ -32,5 +32,3 @@ double qbRT::RM::Cube::ObjectFcn(qbVector3<double> *location, qbVector3<double> 
 	qbVector3<double> intParms = std::vector<double>{1.0, 1.0, 1.0};
 	return qbRT::RM::SDF::Box(*location, center, intParms);		
 }
-
-

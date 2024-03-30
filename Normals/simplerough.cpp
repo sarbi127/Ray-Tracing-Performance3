@@ -27,5 +27,3 @@ qbVector3<double> qbRT::Normal::SimpleRough::ComputePerturbation(const qbVector3
 	qbVector3<double> perturbation = std::vector<double> {x, y, z};
 	return PerturbNormal(normal, perturbation);
 }
-
-
